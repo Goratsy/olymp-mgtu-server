@@ -22,7 +22,7 @@ const UserModel = require('./models/UserModel.js');
 app.get('/test', async (req, res) => {
     try {
         let tasks = await TaskModel.find({});
-        res.json(JSON.stringify(tasks));
+        res.json(tasks);
     }
     catch (err) {
         res.status(500).send(`Произошла ошибка ${err}`)
