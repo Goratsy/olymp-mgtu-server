@@ -19,9 +19,10 @@ mongoose
 const TaskModel = require('./models/TaskModel.js');
 const UserModel = require('./models/UserModel.js');
 
-app.get('/test', async (req, res) => {
+app.get('/allTasks', async (req, res) => {
     try {
         let tasks = await TaskModel.find({});
+        console.log(tasks);
         res.json(tasks);
     }
     catch (err) {
