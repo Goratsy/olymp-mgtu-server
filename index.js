@@ -22,10 +22,25 @@ const UserModel = require('./models/UserModel.js');
 app.get('/allTasks', async (req, res) => {
     try {
         let tasks = await TaskModel.find({});
-        console.log(tasks);
-        res.json(tasks);
+        res.status(200).json(tasks);
     }
     catch (err) {
         res.status(500).send(`Произошла ошибка ${err}`)
     }
 });
+
+app.get('/taskByFilter', async (req, res) => {
+    let request = req.query;
+    let query = {};
+
+    if (request.difficult) query.difficult = request.difficult
+    if (request.year) query.year = request.year
+    if (request.subject) query.subject = request.subject
+
+    try {
+        let dataTasks = await TaskModel.find(query);
+        res.status(200).json(dataTasks);
+    } catch (error) { 
+        res.status(400).send(`Не смогли отфильтровать ${err}`)
+    }
+})
