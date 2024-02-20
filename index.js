@@ -25,7 +25,7 @@ app.get('/allTasks', async (req, res) => {
         res.status(200).json(tasks);
     }
     catch (err) {
-        res.status(500).send(`Произошла ошибка ${err}`)
+        res.status(500).send(`Произошла ошибка ${err}`);
     }
 });
 
@@ -33,14 +33,28 @@ app.get('/taskByFilter', async (req, res) => {
     let request = req.query;
     let query = {};
 
-    if (request.difficult) query.difficult = request.difficult
-    if (request.year) query.year = request.year
-    if (request.subject) query.subject = request.subject
+    if (request.difficult) query.difficult = request.difficult;
+    if (request.year) query.year = request.year;
+    if (request.subject) query.subject = request.subject;
 
     try {
         let dataTasks = await TaskModel.find(query);
         res.status(200).json(dataTasks);
     } catch (error) { 
-        res.status(400).send(`Не смогли отфильтровать ${err}`)
+        res.status(500).send(`Нельзя применить фильтры: ${err}`);
     }
 })
+
+app.get('/checkAnswer', async (req, res) => {
+    let request = req.query;
+    try {
+        let task = await TaskModel.findOne({_id: request.id});
+        if (task.answer === Number(request.answer)) {
+            res.status(200).json({isCorrectAnswer: true});
+        } else {
+            res.status(200).json({isCorrectAnswer: false});
+        }
+    } catch (err) {
+        res.status(500).json(`Не найдена задача ${err}`);
+    }
+});
