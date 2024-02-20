@@ -6,6 +6,7 @@ const TaskSchema = new mongoose.Schema({
     answer: Number,
     difficult: String,
     imageTasks: Array,
+    executionStage: String,
 });
 
 module.exports = mongoose.model('task', TaskSchema);
