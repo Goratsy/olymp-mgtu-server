@@ -19,18 +19,11 @@ mongoose
 const TaskModel = require('./models/TaskModel.js');
 const UserModel = require('./models/UserModel.js');
 
-app.get('/allTasks', async (req, res) => {
-    try {
-        let tasks = await TaskModel.find({});
-        res.status(200).json(tasks);
-    }
-    catch (err) {
-        res.status(500).send(`Произошла ошибка ${err}`);
-    }
-});
-
 app.get('/taskByFilter', async (req, res) => {
     let request = req.query;
+    let page = Number(request.page);
+    let perPage = 2;
+
     let query = {};
 
     if (request.difficult) query.difficult = request.difficult;
@@ -39,7 +32,8 @@ app.get('/taskByFilter', async (req, res) => {
 
     try {
         let dataTasks = await TaskModel.find(query);
-        res.status(200).json(dataTasks);
+        let response = {tasks: dataTasks.slice((page-1) * perPage, page * perPage), numberOfpage: Math.ceil(dataTasks.length / perPage)};
+        res.status(200).json(response);
     } catch (error) { 
         res.status(500).send(`Нельзя применить фильтры: ${err}`);
     }
