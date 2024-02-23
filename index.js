@@ -1,6 +1,6 @@
 import * as dotenv from 'dotenv';
 dotenv.config()
-import Express from 'express';
+import Express, { response } from 'express';
 const app = Express();
 const PORT = process.env.PORT ?? 7000;
 
@@ -62,13 +62,11 @@ app.post('/helpGpt', (req, res) => {
 
 import multer from 'multer';
 import fs from 'fs';
-
 const upload = multer({ dest: 'uploads/' });
-
-
 
 app.post('/upload', upload.single('file'), (req, res) => {
     const file = req.file;
+
     if (!file) {
         return res.status(400).send('Нет загруженного файла');
     }
@@ -77,7 +75,7 @@ app.post('/upload', upload.single('file'), (req, res) => {
         if (err) {console.error('Ошибка чтения файла:', err); return;}
 
         const requestJson = {
-            message: `Объясни коротко на русском программный код, написанный на python: ${data}`,
+            message: `Объясни коротко на русском программный код, написанный на python: ${data}.`,
             api_key: process.env.API_KEY_GPT
         };
 
@@ -97,6 +95,7 @@ app.post('/upload', upload.single('file'), (req, res) => {
         .then(data => {
             if (data.is_success) {
                 console.log(`Ответ от бота: ${data.response}`);
+                res.status(200).json({answerFromGPT: data.response});
             } else {
                 const error = data.error_message;
                 console.error(`Ошибка: ${error}`);
