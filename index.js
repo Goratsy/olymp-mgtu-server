@@ -2,7 +2,7 @@ import * as dotenv from 'dotenv';
 dotenv.config()
 import Express, { response } from 'express';
 const app = Express();
-const PORT = process.env.PORT ?? 7000;
+const PORT = process.env.PORT || 7000;
 
 
 app.listen(PORT, () => {
