@@ -1,6 +1,6 @@
 import * as dotenv from 'dotenv';
 dotenv.config()
-import Express, { response } from 'express';
+import Express from 'express';
 const app = Express();
 const PORT = process.env.PORT || 7000;
 
@@ -20,7 +20,6 @@ mongoose
     .catch(() => {console.log('Error connecting DB');});
 
 import TaskModel from './models/TaskModel.js';
-import UserModel from './models/UserModel.js';
 
 app.get('/taskByFilter', async (req, res) => {
     let request = req.query;
@@ -56,16 +55,16 @@ app.get('/checkAnswer', async (req, res) => {
     }
 });
 
-app.post('/helpGpt', (req, res) => {
-
-})
-
 import multer from 'multer';
 import fs from 'fs';
 const upload = multer({ dest: 'uploads/' });
 
-app.post('/upload', upload.single('file'), (req, res) => {
+app.post('/upload', upload.single('file'), async (req, res) => {
     const file = req.file;
+    const idTask = req.query.id;
+
+    let task = await TaskModel.findOne({_id: idTask});
+    let answerAuthorsTask = task.helperText;
 
     if (!file) {
         return res.status(400).send('Нет загруженного файла');
@@ -75,7 +74,17 @@ app.post('/upload', upload.single('file'), (req, res) => {
         if (err) {console.error('Ошибка чтения файла:', err); return;}
 
         const requestJson = {
-            message: `Объясни коротко на русском программный код, написанный на python: ${data}.`,
+            message: `
+            Ты эксперт, который объясняет ученику, правильность его кода на языке программирования. 
+            Примечание: коды могут отличаться друг от друга, главное проверить конечный результат, правильный ли он. 
+ 
+            Это правильный ответ от автора: 
+            ${answerAuthorsTask}
+             
+            Это от ученика: 
+            ${data}
+             
+            Объясни, в чем он не прав, выделяя каждый пункт, обращаясь к ученику на Вы`,
             api_key: process.env.API_KEY_GPT
         };
 
@@ -94,7 +103,6 @@ app.post('/upload', upload.single('file'), (req, res) => {
         })
         .then(data => {
             if (data.is_success) {
-                console.log(`Ответ от бота: ${data.response}`);
                 res.status(200).json({answerFromGPT: data.response});
             } else {
                 const error = data.error_message;

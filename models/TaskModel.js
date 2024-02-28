@@ -7,6 +7,7 @@ const TaskSchema = new mongoose.Schema({
     difficult: String,
     imageTasks: Array,
     executionStage: String,
+    helperText: String,
 });
 
 export default mongoose.model('task', TaskSchema);
