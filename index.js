@@ -24,7 +24,7 @@ import TaskModel from './models/TaskModel.js';
 app.get('/taskByFilter', async (req, res) => {
     let request = req.query;
     let page = Number(request.page);
-    let perPage = 2;
+    let perPage = 4;
 
     let query = {};
 
@@ -45,7 +45,7 @@ app.get('/checkAnswer', async (req, res) => {
     let request = req.query;
     try {
         let task = await TaskModel.findOne({_id: request.id});
-        if (task.answer === Number(request.answer)) {
+        if (task.answer == Number(request.answer)) {
             res.status(200).json({isCorrectAnswer: true});
         } else {
             res.status(200).json({isCorrectAnswer: false});
@@ -59,12 +59,12 @@ import multer from 'multer';
 import fs from 'fs';
 const upload = multer({ dest: 'uploads/' });
 
-app.post('/upload', upload.single('file'), async (req, res) => {
+app.post('/getSolutionFromGPT', upload.single('file'), async (req, res) => {
     const file = req.file;
     const idTask = req.query.id;
 
     let task = await TaskModel.findOne({_id: idTask});
-    let answerAuthorsTask = task.helperText;
+    let answerAuthorsTask = task.answerCode;
 
     if (!file) {
         return res.status(400).send('Нет загруженного файла');
@@ -88,7 +88,7 @@ app.post('/upload', upload.single('file'), async (req, res) => {
             api_key: process.env.API_KEY_GPT
         };
 
-        fetch('https://ask.chadgpt.ru/api/public/gpt-3.5', {
+        fetch('https://ask.chadgpt.ru/api/public/gpt-4', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
