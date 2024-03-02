@@ -4,6 +4,12 @@ import Express from 'express';
 const app = Express();
 const PORT = process.env.PORT || 7000;
 
+app.use(
+    cors({
+      origin: 'http://45.91.8.23:3000',
+      preflightContinue: true,
+    }),
+  );
 
 app.listen(PORT, () => {
     console.log(`http://localhost:${PORT}`);
