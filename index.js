@@ -1,8 +1,10 @@
 import * as dotenv from 'dotenv';
 dotenv.config()
 import Express from 'express';
+import cors from 'cors';
 const app = Express();
 const PORT = process.env.PORT || 7000;
+
 
 app.use(
     cors({
