@@ -11,7 +11,7 @@ app.use(
       origin: 'http://45.91.8.23:3000',
       preflightContinue: true,
     }),
-  );
+);
 
 app.listen(PORT, () => {
     console.log(`http://localhost:${PORT}`);
@@ -92,8 +92,9 @@ app.post('/getSolutionFromGPT', upload.single('file'), async (req, res) => {
             Это от ученика: 
             ${data}
              
-            Объясни, в чем он не прав, выделяя каждый пункт, обращаясь к ученику на Вы`,
-            api_key: process.env.API_KEY_GPT
+            Объясни, в чем он не прав, выделяя каждый пункт, обращаясь к ученику на Вы. Напиши очень коротко (максимум 500 символов) и ясно`,
+            api_key: process.env.API_KEY_GPT,
+            max_tokens: 500,
         };
 
         fetch('https://ask.chadgpt.ru/api/public/gpt-4', {
