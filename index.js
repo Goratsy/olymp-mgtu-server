@@ -82,7 +82,7 @@ app.post('/getSolutionFromGPT', upload.single('file'), async (req, res) => {
     fs.readFile(`${file.path}`, 'utf8', (err, data) => {
         if (err) {
             console.error('Ошибка чтения файла:', err);
-            res.status(500).json(err)
+            res.status(500).json(err);
             return;
         }
 
@@ -122,7 +122,8 @@ app.post('/getSolutionFromGPT', upload.single('file'), async (req, res) => {
                 res.status(200).json({answerFromGPT: data.response});
             } else {
                 const error = data.error_message;
-                throw new Error(error)
+                console.log('Error with data');
+                throw new Error(error);
             }
         })
         .catch(error => {
