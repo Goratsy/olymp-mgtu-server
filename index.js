@@ -18,6 +18,7 @@ app.listen(PORT, () => {
 });
 
 app.use(Express.json());
+Express.urlencoded({extended: false});
 
 import mongoose from 'mongoose';
 const urlMongodb = process.env.API_KEY_MONGODB;
