@@ -79,7 +79,11 @@ app.post('/getSolutionFromGPT', upload.single('file'), async (req, res) => {
     }
 
     fs.readFile(`${file.path}`, 'utf8', (err, data) => {
-        if (err) {console.error('Ошибка чтения файла:', err); return;}
+        if (err) {
+            console.error('Ошибка чтения файла:', err);
+            res.status(500).json(err)
+            return;
+        }
 
         const requestJson = {
             message: `
@@ -111,23 +115,24 @@ app.post('/getSolutionFromGPT', upload.single('file'), async (req, res) => {
             return response.json();
         })
         .then(data => {
+            console.log('data received: ')
+            console.log(data)
             if (data.is_success) {
                 res.status(200).json({answerFromGPT: data.response});
             } else {
                 const error = data.error_message;
-                console.error(`Ошибка: ${error}`);
+                throw new Error(error)
             }
         })
         .catch(error => {
             console.error('Ошибка:', error);
+            res.status(500).json(error)
         });
         
         fs.unlink(`${file.path}`, err => {
-            if (err) {console.error('Ошибка удаления файла:', err); return;}
+            if (err) {
+                console.error('Ошибка удаления файла:', err);
+            }
         });
     });
 });
-
-
-
-
