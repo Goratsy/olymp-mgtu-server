@@ -119,12 +119,10 @@ app.post('/getSolutionFromGPT', upload.single('file'), async (req, res) => {
         })
         .then(data => {
             console.log('data received: ')
-            console.log(data)
             if (data.is_success) {
                 res.status(200).json({answerFromGPT: data.response});
             } else {
                 const error = data.error_message;
-                console.log('Error with data');
                 throw new Error(error);
             }
         })
