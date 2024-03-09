@@ -6,6 +6,7 @@ const TaskSchema = new mongoose.Schema({
     answer: Number,
     difficult: String,
     imageTasks: Array,
+    solution: Array,
     executionStage: String,
     answerCode: String,
     point: Number,
