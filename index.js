@@ -33,7 +33,7 @@ import TaskModel from './models/TaskModel.js';
 app.get('/taskByFilter', async (req, res) => {
     let request = req.query;
     let page = Number(request.page);
-    let perPage = 4;
+    let perPage = 5;
 
     let query = {};
 
@@ -84,7 +84,7 @@ app.post('/getSolutionFromGPT', upload.single('file'), async (req, res) => {
             console.error('Ошибка чтения файла:', err);
             res.status(500).json(err);
             return;
-        }
+        } 
 
         const requestJson = {
             message: `

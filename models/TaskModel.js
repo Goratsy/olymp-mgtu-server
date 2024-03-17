@@ -10,6 +10,7 @@ const TaskSchema = new mongoose.Schema({
     executionStage: String,
     answerCode: String,
     point: Number,
+    idTask: String,
 });
 
 export default mongoose.model('task', TaskSchema);
